@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Browser Tab -->
+    <title>NEON MUSIC</title>
+    <link rel="icon" type="image/png" href="messi.png">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    #17205c 0%,
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    circle at 80% 80%,
+                    #3b0755 0%,
+                    transparent 35%
+                ),
+
+                #050510;
+
+            color: white;
+
+            overflow: hidden;
+        }
+
+
+        /* CYBERPUNK GRID */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(0, 255, 255, 0.05) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(0, 255, 255, 0.05) 1px,
+                    transparent 1px
+                );
+
+            background-size: 50px 50px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    transparent,
+                    black 20%,
+                    black 80%,
+                    transparent
+                );
+
+            pointer-events: none;
+        }
+
+
+        /* MAIN PLAYER */
+
+        .player {
+
+            position: relative;
+
+            width: 430px;
+
+            padding: 35px;
+
+            background:
+                rgba(8, 10, 30, 0.88);
+
+            border:
+                1px solid rgba(0, 255, 255, 0.5);
+
+            border-radius: 25px;
+
+            box-shadow:
+
+                0 0 20px
+                rgba(0, 255, 255, 0.25),
+
+                0 0 60px
+                rgba(140, 0, 255, 0.15),
+
+                inset 0 0 30px
+                rgba(0, 255, 255, 0.03);
+
+            backdrop-filter: blur(15px);
+
+            text-align: center;
+        }
+
+
+        /* LOGO */
+
+        .logo {
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            letter-spacing: 6px;
+
+            color: #00ffff;
+
+            text-shadow:
+
+                0 0 5px #00ffff,
+
+                0 0 15px #00ffff,
+
+                0 0 30px #00ffff;
+
+            margin-bottom: 10px;
+        }
+
+
+        .subtitle {
+
+            font-size: 11px;
+
+            letter-spacing: 4px;
+
+            color: #9ca3af;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* NEON LINE */
+
+        .line {
+
+            height: 1px;
+
+            width: 100%;
+
+            margin: 20px 0;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    #00ffff,
+                    #7c00ff,
+                    transparent
+                );
+
+            box-shadow:
+                0 0 10px #00ffff;
+        }
+
+
+        /* ALBUM */
+
+        .album {
+
+            width: 220px;
+
+            height: 220px;
+
+            margin: 0 auto 25px;
+
+            border-radius: 50%;
+
+            overflow: hidden;
+
+            border: 5px solid #111;
+
+            background: #111;
+
+            box-shadow:
+
+                0 0 15px #00ffff,
+
+                0 0 35px
+                rgba(0, 255, 255, 0.5),
+
+                0 0 70px
+                rgba(140, 0, 255, 0.4);
+        }
+
+
+        /* MESSI IMAGE */
+
+        .album img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+            object-position: center;
+        }
+
+
+        /* ROTATION */
+
+        .album.playing {
+
+            animation:
+                spin 4s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* SONG NAME */
+
+        .song-name {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: white;
+
+            margin-bottom: 8px;
+
+            text-shadow:
+                0 0 10px
+                rgba(255, 255, 255, 0.4);
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+        }
+
+
+        /* STATUS */
+
+        .status {
+
+            font-size: 11px;
+
+            letter-spacing: 3px;
+
+            color: #00ffff;
+
+            margin-bottom: 25px;
+
+            text-shadow:
+                0 0 10px #00ffff;
+        }
+
+
+        /* HIDE FILE INPUT */
+
+        input[type="file"] {
+
+            display: none;
+        }
+
+
+        /* SELECT BUTTON */
+
+        .file-button {
+
+            display: inline-block;
+
+            padding: 12px 22px;
+
+            border:
+                1px solid #00ffff;
+
+            border-radius: 10px;
+
+            color: #00ffff;
+
+            background:
+                rgba(0, 255, 255, 0.05);
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 0 10px
+                rgba(0, 255, 255, 0.2);
+        }
+
+
+        .file-button:hover {
+
+            background: #00ffff;
+
+            color: #050510;
+
+            box-shadow:
+
+                0 0 15px #00ffff,
+
+                0 0 35px #00ffff;
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* AUDIO PLAYER */
+
+        audio {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            filter:
+                drop-shadow(
+                    0 0 5px
+                    rgba(0, 255, 255, 0.3)
+                );
+        }
+
+
+        /* FOOTER */
+
+        .footer {
+
+            margin-top: 20px;
+
+            font-size: 9px;
+
+            letter-spacing: 3px;
+
+            color: #555;
+
+            text-transform: uppercase;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 500px) {
+
+            .player {
+
+                width: 90%;
+
+                padding: 25px;
+            }
+
+            .album {
+
+                width: 180px;
+
+                height: 180px;
+            }
+
+            .logo {
+
+                font-size: 22px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="player">
+
+
+        <div class="logo">
+            NEON MUSIC
+        </div>
+
+
+        <div class="subtitle">
+            CYBERPUNK AUDIO SYSTEM
+        </div>
+
+
+        <div class="line"></div>
+
+
+        <!-- ALBUM IMAGE -->
+
+        <div class="album" id="album">
+
+            <img
+                src="messi.png"
+                alt="Music Cover"
+            >
+
+        </div>
+
+
+        <!-- SONG NAME -->
+
+        <div
+            class="song-name"
+            id="songName">
+
+            NO TRACK SELECTED
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div
+            class="status"
+            id="status">
+
+            SYSTEM READY
+
+        </div>
+
+
+        <!-- SELECT MP3 -->
+
+        <label
+            for="musicFile"
+            class="file-button">
+
+            SELECT MP3
+
+        </label>
+
+
+        <input
+            type="file"
+            id="musicFile"
+            accept=".mp3,audio/mpeg"
+        >
+
+
+        <!-- AUDIO -->
+
+        <audio
+            id="audioPlayer"
+            controls>
+
+        </audio>
+
+
+        <div class="footer">
+
+            NEON AUDIO // SYSTEM ONLINE
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+
+        const musicFile =
+            document.getElementById("musicFile");
+
+
+        const audioPlayer =
+            document.getElementById("audioPlayer");
+
+
+        const songName =
+            document.getElementById("songName");
+
+
+        const status =
+            document.getElementById("status");
+
+
+        const album =
+            document.getElementById("album");
+
+
+        /* SELECT MP3 */
+
+        musicFile.addEventListener(
+            "change",
+            function () {
+
+
+                const file =
+                    this.files[0];
+
+
+                if (!file) {
+
+                    return;
+
+                }
+
+
+                const musicURL =
+                    URL.createObjectURL(file);
+
+
+                audioPlayer.src =
+                    musicURL;
+
+
+                songName.textContent =
+                    file.name;
+
+
+                status.textContent =
+                    "NOW PLAYING";
+
+
+                album.classList.add(
+                    "playing"
+                );
+
+
+                audioPlayer.play();
+
+            }
+        );
+
+
+        /* PLAY */
+
+        audioPlayer.addEventListener(
+            "play",
+            function () {
+
+
+                album.classList.add(
+                    "playing"
+                );
+
+
+                status.textContent =
+                    "NOW PLAYING";
+
+            }
+        );
+
+
+        /* PAUSE */
+
+        audioPlayer.addEventListener(
+            "pause",
+            function () {
+
+
+                album.classList.remove(
+                    "playing"
+                );
+
+
+                status.textContent =
+                    "PAUSED";
+
+            }
+        );
+
+
+        /* END */
+
+        audioPlayer.addEventListener(
+            "ended",
+            function () {
+
+
+                album.classList.remove(
+                    "playing"
+                );
+
+
+                status.textContent =
+                    "TRACK ENDED";
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>
